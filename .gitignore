@@ -1,0 +1,14 @@
+# Big data folders (do NOT commit)
+data/raw/
+data/external/
+graphs/
+outputs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Mac
+.DS_Store
