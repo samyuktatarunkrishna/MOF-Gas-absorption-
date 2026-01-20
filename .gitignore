@@ -1,14 +1,59 @@
-# Big data folders (do NOT commit)
+# =========================
+# Data (do NOT commit big data)
+# =========================
 data/raw/
 data/external/
 graphs/
 outputs/
 
-# Python
-__pycache__/
-*.pyc
-.venv/
-.env
+# Generated/processed data (usually don’t commit)
+data/processed/
+# Keep small, reproducible artifacts
+!data/processed/splits_seed42.json
+!data/processed/run_labeled_subgraph_stats.csv
 
-# Mac
+# If you later decide to keep other tiny processed files, add more !exceptions above.
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.venv/
+venv/
+.env
+.env.*
+pip-wheel-metadata/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Caches / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# =========================
+# OS / Editor
+# =========================
 .DS_Store
+Thumbs.db
+
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
