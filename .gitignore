@@ -1,21 +1,31 @@
 # =========================
-# Data (do NOT commit big data)
+# DATA (do NOT commit large datasets)
 # =========================
 data/raw/
 data/external/
-graphs/
-outputs/
 
-# Generated/processed data (usually don’t commit)
-data/processed/
-# Keep small, reproducible artifacts
+# Processed data: ignore by default, keep only small reproducible artifacts
+data/processed/*
 !data/processed/splits_seed42.json
 !data/processed/run_labeled_subgraph_stats.csv
+!data/processed/labeled_coverage_by_threshold.csv
+!data/processed/overlap_refcodes.txt
+!data/processed/labels_co2_crafted_298K_1bar.csv
+!data/processed/MOFCSD_with_co2_labels.csv
 
-# If you later decide to keep other tiny processed files, add more !exceptions above.
+# PyG serialized graphs can be large → ignore
+data/processed/pyg/
+
+# Graph exports can be large → ignore
+graphs/
+
+# Model outputs: ignore everything EXCEPT thesis figures
+outputs/*
+!outputs/figures/
+!outputs/figures/**
 
 # =========================
-# Python
+# PYTHON / ENV
 # =========================
 __pycache__/
 *.py[cod]
@@ -41,19 +51,17 @@ dist/
 .coverage
 coverage.xml
 
-# Jupyter
-.ipynb_checkpoints/
-
 # Logs
 *.log
 
 # =========================
-# OS / Editor
+# JUPYTER
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# OS / EDITOR
 # =========================
 .DS_Store
 Thumbs.db
-
 .vscode/
-!.vscode/settings.json
-!.vscode/launch.json
-!.vscode/extensions.json
