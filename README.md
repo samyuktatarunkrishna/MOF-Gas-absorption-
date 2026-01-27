@@ -1,6 +1,8 @@
 # Learning to Predict Material Properties with Limited Data  
 *A data-driven study on CO₂ adsorption in Metal–Organic Frameworks (MOFs)*
 
+---
+
 ## 1. Why this problem matters (real-world motivation)
 
 Reducing atmospheric CO₂ is one of the key scientific challenges related to climate change and sustainable energy systems.  
@@ -63,24 +65,24 @@ This assumption allows information to be shared across a graph, which is especia
 - These graphs are **sparsified using different thresholds**, producing networks of varying density.
 - Multiple graph realizations (“runs”) are used to test robustness.
 
-This workflow is inspired by earlier graph-based MOF studies, particularly work that uses large similarity networks to propagate information across chemically related structures.
+This workflow is inspired by earlier graph-based MOF studies that use large similarity networks to propagate information across chemically related structures.
 
 ---
 
 ## 4. What the pipeline does (high-level flow)
 
-1. **Inspect and clean MOF structural data**
-2. **Extract CO₂ adsorption labels** from raw isotherm files
-3. **Match adsorption labels to MOF structures**
-4. **Create fixed train/validation/test splits**
-   - Designed to reflect a **few-shot learning scenario**
-5. **Load MOF similarity graphs at different thresholds**
-6. **Analyze how many labeled MOFs appear inside each graph**
-7. **Audit connectivity between training and test nodes**
-8. **Train baseline machine-learning models**
-9. **Train graph-based neural networks**
-10. **Compare real graphs against shuffled (control) graphs**
-11. **Summarize results across multiple runs**
+1. Inspect and clean MOF structural data  
+2. Extract CO₂ adsorption labels from raw isotherm files  
+3. Match adsorption labels to MOF structures  
+4. Create fixed train/validation/test splits  
+   - Designed to reflect a **few-shot learning scenario**  
+5. Load MOF similarity graphs at different thresholds  
+6. Analyze how many labeled MOFs appear inside each graph  
+7. Audit connectivity between training and test nodes  
+8. Train baseline machine-learning models  
+9. Train graph-based neural networks  
+10. Compare real graphs against shuffled (control) graphs  
+11. Summarize results across multiple runs  
 
 Each step is implemented as a separate script or notebook for clarity and reproducibility.
 
@@ -98,7 +100,7 @@ This means:
 The project explicitly studies how performance changes when:
 - graph density increases,
 - labeled nodes become more connected,
-- graph structure is preserved vs randomized.
+- graph structure is preserved versus randomized.
 
 ---
 
@@ -130,7 +132,7 @@ These models use only local MOF descriptors and serve as reference points.
 Instead of focusing only on final error values, the analysis emphasizes:
 
 - how label coverage changes with graph sparsification,
-- how much information can “leak” from train to test nodes,
+- how much information can propagate from training to test nodes,
 - whether real graphs outperform shuffled ones,
 - stability of results across multiple runs.
 
@@ -158,16 +160,17 @@ This helps answer **why** a model behaves the way it does, not just **how well**
 ├── outputs/figures/ # generated plots and visual diagnostics
 └── README.md
 
+
 Large external datasets are intentionally excluded and must be downloaded separately.
 
 ---
 
 ## 9. What this project demonstrates
 
-- A complete **end-to-end workflow** for learning material properties with limited labels
-- Careful handling of data scarcity and evaluation bias
-- Meaningful use of graph structure in materials science
-- Clear comparison between classical ML, graph-based features, and GNNs
+- A complete **end-to-end workflow** for learning material properties with limited labels  
+- Careful handling of data scarcity and evaluation bias  
+- Meaningful use of graph structure in materials science  
+- Clear comparison between classical ML, graph-based features, and GNNs  
 
 The emphasis throughout is on **understanding**, not black-box performance.
 
@@ -181,4 +184,26 @@ For a full run:
 ```bash
 python src/run_all.py
 
-Notebooks can be run in order for exploratory analysis and visualization. 
+
+Large external datasets are intentionally excluded and must be downloaded separately.
+
+---
+
+## 9. What this project demonstrates
+
+- A complete **end-to-end workflow** for learning material properties with limited labels  
+- Careful handling of data scarcity and evaluation bias  
+- Meaningful use of graph structure in materials science  
+- Clear comparison between classical ML, graph-based features, and GNNs  
+
+The emphasis throughout is on **understanding**, not black-box performance.
+
+---
+
+## 10. How to run the pipeline
+
+Each stage can be executed independently.  
+For a full run:
+
+```bash
+python src/run_all.py
