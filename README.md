@@ -186,37 +186,17 @@ python src/run_all.py
 
 Notebooks can be run in order for exploratory analysis and visualization.
 
-11. Related Research Repositories and Foundations
+## 11. Related Research Repositories and Foundations
 
 This project builds upon ideas, data structures, and research directions from existing open-source work in the MOF and materials-informatics community, particularly repositories that focus on MOF similarity graphs and graph-based learning.
-
-The following repositories were referenced during the design and validation of this workflow:
-
-MOFGalaxyNet
+The following repositories were referenced during the design and validation of this workflow.
 
 MOFGalaxyNet provides a large-scale similarity network of Metal–Organic Frameworks, where MOFs are represented as nodes and edges encode structural or chemical similarity.
 The idea of treating MOFs as a graph, rather than independent samples, motivated the use of graph-based learning and similarity-aware modeling in this project.
 
-BlackHole (Graph Sparsification Framework)
-
 The BlackHole repository introduces a method for sparsifying large similarity graphs using different similarity thresholds and multiple runs.
 This concept is directly used here to study how graph sparsification affects label availability, information flow, and learning behavior under limited data.
+Different sparsification thresholds (e.g. 0.90, 0.10, 0.00) are analyzed to understand the trade-off between graph size, label coverage, and potential information leakage across data splits.
 
-Different sparsification thresholds (e.g. 0.90, 0.10, 0.00) are analyzed to understand the trade-off between:
-
-graph size,
-
-label coverage,
-
-potential information leakage across data splits.
-
-While this repository does not directly reproduce or extend those works, it adopts their core ideas and adapts them to a focused problem:
-predicting CO₂ adsorption in MOFs when only a small number of labeled materials are available.
-
-These references helped shape:
-
-the decision to use similarity graphs instead of purely tabular data,
-
-the threshold-based graph construction strategy,
-
-the evaluation setup comparing real graphs against shuffled (structure-destroyed) graphs.
+While this repository does not directly reproduce or extend those works, it adopts their core ideas and adapts them to a focused problem: predicting CO₂ adsorption in MOFs when only a small number of labeled materials are available.
+These references helped shape the decision to use similarity graphs instead of purely tabular data, the threshold-based graph construction strategy, and the evaluation setup comparing real graphs against shuffled (structure-destroyed) graphs.
