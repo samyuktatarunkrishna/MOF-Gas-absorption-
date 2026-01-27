@@ -184,26 +184,39 @@ For a full run:
 ```bash
 python src/run_all.py
 
+Notebooks can be run in order for exploratory analysis and visualization.
 
-Large external datasets are intentionally excluded and must be downloaded separately.
+11. Related Research Repositories and Foundations
 
----
+This project builds upon ideas, data structures, and research directions from existing open-source work in the MOF and materials-informatics community, particularly repositories that focus on MOF similarity graphs and graph-based learning.
 
-## 9. What this project demonstrates
+The following repositories were referenced during the design and validation of this workflow:
 
-- A complete **end-to-end workflow** for learning material properties with limited labels  
-- Careful handling of data scarcity and evaluation bias  
-- Meaningful use of graph structure in materials science  
-- Clear comparison between classical ML, graph-based features, and GNNs  
+MOFGalaxyNet
 
-The emphasis throughout is on **understanding**, not black-box performance.
+MOFGalaxyNet provides a large-scale similarity network of Metal–Organic Frameworks, where MOFs are represented as nodes and edges encode structural or chemical similarity.
+The idea of treating MOFs as a graph, rather than independent samples, motivated the use of graph-based learning and similarity-aware modeling in this project.
 
----
+BlackHole (Graph Sparsification Framework)
 
-## 10. How to run the pipeline
+The BlackHole repository introduces a method for sparsifying large similarity graphs using different similarity thresholds and multiple runs.
+This concept is directly used here to study how graph sparsification affects label availability, information flow, and learning behavior under limited data.
 
-Each stage can be executed independently.  
-For a full run:
+Different sparsification thresholds (e.g. 0.90, 0.10, 0.00) are analyzed to understand the trade-off between:
 
-```bash
-python src/run_all.py
+graph size,
+
+label coverage,
+
+potential information leakage across data splits.
+
+While this repository does not directly reproduce or extend those works, it adopts their core ideas and adapts them to a focused problem:
+predicting CO₂ adsorption in MOFs when only a small number of labeled materials are available.
+
+These references helped shape:
+
+the decision to use similarity graphs instead of purely tabular data,
+
+the threshold-based graph construction strategy,
+
+the evaluation setup comparing real graphs against shuffled (structure-destroyed) graphs.
