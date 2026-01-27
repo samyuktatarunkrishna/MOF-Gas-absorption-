@@ -1,0 +1,5 @@
+run,unique_nodes_in_run,labeled_nodes_in_run,edges_total,edges_labeled
+run_0,1231,38,1200,9
+run_1,1257,36,1228,6
+run_2,1229,39,1195,7
+run_3,1195,38,1204,6

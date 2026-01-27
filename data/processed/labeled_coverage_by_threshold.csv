@@ -1,0 +1,13 @@
+threshold,run,graph_nodes,graph_edges,labeled_total,labeled_in_graph,train_labeled_in_graph,val_labeled_in_graph,test_labeled_in_graph
+threshold_0.00,run_0,11073,195379,363,307,216,42,49
+threshold_0.00,run_1,11164,196714,363,311,218,43,50
+threshold_0.00,run_2,11060,195559,363,311,218,43,50
+threshold_0.00,run_3,11055,195180,363,313,219,44,50
+threshold_0.10,run_0,9943,164272,363,271,187,38,46
+threshold_0.10,run_1,10048,165727,363,271,187,37,47
+threshold_0.10,run_2,9940,164461,363,274,188,39,47
+threshold_0.10,run_3,9923,164099,363,277,190,40,47
+threshold_0.90,run_0,1231,1200,363,38,26,7,5
+threshold_0.90,run_1,1257,1228,363,36,23,8,5
+threshold_0.90,run_2,1229,1195,363,39,25,9,5
+threshold_0.90,run_3,1195,1204,363,38,25,9,4
