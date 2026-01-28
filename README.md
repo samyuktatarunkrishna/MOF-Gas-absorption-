@@ -4,183 +4,197 @@
 ---
 
 ## 1. Why this problem matters (real-world motivation)
-Reducing atmospheric CO₂ is one of the key scientific challenges related to climate change and sustainable energy systems.
-
-Metal–Organic Frameworks (MOFs) are promising materials for applications such as:
-- carbon capture and storage
-- gas separation and purification
-- catalysis and clean energy processes
-
-However, the main bottleneck is material screening.
-
-There are tens of thousands of known MOF structures, but:
-- experimental adsorption measurements are expensive and slow
-- high-fidelity simulations are computationally heavy
-- only a very small fraction of MOFs have measured CO₂ uptake data
-
-From a scientist’s perspective, this raises a practical question:  
-**How can we identify promising MOFs for CO₂ adsorption when labeled experimental data is extremely limited?**
-
-This project explores that question using data-driven and graph-based learning methods.
+- Reducing atmospheric CO₂ is a central challenge in climate science, clean energy, and sustainable industrial processes.
+- Metal–Organic Frameworks (MOFs) are porous materials that can be useful for:
+  - carbon capture and storage,
+  - gas separation and purification,
+  - catalysis and energy-efficient chemical processes.
+- The bottleneck is **material screening**:
+  - tens of thousands of MOF structures exist,
+  - reliable CO₂ adsorption measurements exist for only a small subset,
+  - generating new labels is slow/expensive (experiments) or computationally heavy (simulation).
+- Practical question:
+  - **How can we prioritize which MOFs are worth deeper experimental or computational evaluation when labeled data is limited?**
+- This project tackles that using **few-shot learning ideas + graph-based learning**.
 
 ---
 
 ## 2. Core idea of the project
-The key idea is to combine three types of information:
-- Structural descriptors of MOFs (e.g., pore size, cavity diameter)
-- Sparse experimental CO₂ adsorption labels (CO₂ uptake at 298 K and 1 bar, available for only a few hundred MOFs)
-- Graph-based similarity information between MOFs, derived from large-scale structural comparison methods
-
-Instead of treating each MOF independently, the project assumes that:
-- MOFs with similar structures are likely to show similar adsorption behavior
-
-This assumption allows information to be shared across a graph, which is especially useful when labels are scarce.
+- The approach combines three information sources:
+  - **Structural descriptors** of MOFs (e.g., pore limiting diameter, cavity diameter)
+  - **Sparse CO₂ adsorption labels** (CO₂ uptake at 298 K and 1 bar)
+  - **MOF similarity graph** where MOFs are nodes and edges represent structural similarity
+- Key assumption:
+  - **Structurally similar MOFs tend to have similar adsorption behavior.**
+- Why this helps:
+  - when labels are scarce, the similarity graph can share information across related structures.
 
 ---
 
 ## 3. Data sources used
-Three main inputs are used in the workflow:
-
-- MOF structural dataset  
-  - A large MOF structure dataset (MOFCSD-style table) containing:
-    - unique MOF identifiers (refcodes)
-    - basic structural descriptors such as pore diameters
-
-- CO₂ adsorption labels  
-  - CO₂ isotherm data extracted from a curated adsorption dataset (CRAFTED)
-  - Only measurements at 298 K and 1 bar are retained for consistency
-  - After strict ID matching and filtering, **363 MOFs** have usable CO₂ labels
-
-- Graph data (MOF similarity networks)  
-  - MOF similarity graphs are taken from a graph-construction pipeline based on structural similarity
-  - These graphs are sparsified using different thresholds, producing networks of varying density
-  - Multiple graph realizations (“runs”) are used to test robustness
-
-This workflow is inspired by earlier graph-based MOF studies that use large similarity networks to propagate information across chemically related structures.
+- **MOF structural dataset**
+  - MOFCSD-style table containing:
+    - unique MOF identifiers (**refcode**),
+    - structural descriptors (pore/cavity related features).
+- **CO₂ adsorption labels**
+  - extracted from **CRAFTED** isotherm files,
+  - fixed condition: **298 K and 1 bar** for comparability,
+  - after strict ID matching and filtering:
+    - **363 MOFs** have usable CO₂ uptake labels.
+- **MOF similarity graphs**
+  - sourced from graph construction work and sparsified via **BlackHole** outputs,
+  - tested at multiple sparsification thresholds:
+    - **threshold_0.90, threshold_0.10, threshold_0.00**
+  - multiple runs per threshold used for robustness.
 
 ---
 
 ## 4. What the pipeline does (high-level flow)
-- Inspect and clean MOF structural data
-- Extract CO₂ adsorption labels from raw isotherm files
-- Match adsorption labels to MOF structures
-- Create fixed train/validation/test splits (few-shot scenario)
-- Load MOF similarity graphs at different thresholds
-- Analyze labeled-node coverage inside each graph
-- Audit connectivity between training and test nodes
-- Train baseline ML models
-- Train graph-based neural networks
-- Compare real graphs vs shuffled (control) graphs
-- Summarize results across multiple runs
-
-Each step is implemented as a separate script or notebook for clarity and reproducibility.
+- Inspect / clean MOF structure table
+- Parse isotherm files and build a CO₂ label table
+- Match labels to MOF refcodes (ID overlap filtering)
+- Create fixed train/val/test splits for labeled MOFs
+- Load graph edges for different thresholds (and multiple runs)
+- Diagnose label coverage inside graphs + connectivity between splits
+- Train baselines (tabular + graph-derived features)
+- Train GNNs (and shuffled-graph controls)
+- Summarize results and generate plots
+- Produce a ranked shortlist of candidate MOFs + confidence
+- Show everything in a Streamlit dashboard
 
 ---
 
-## 5. Why “few-shot” learning is central here
-Although the full MOF dataset contains over 14,000 structures, only **363 MOFs** have CO₂ adsorption labels.
-
-This means:
-- traditional data-hungry models are not suitable
-- performance must be evaluated carefully
-- the goal is not absolute prediction accuracy, but learning efficiency under limited supervision
-
-The project explicitly studies how performance changes when:
-- graph density increases
-- labeled nodes become more connected
-- graph structure is preserved versus randomized
+## 5. Few-shot learning angle (why this is “limited data”)
+- Scale mismatch:
+  - ~14k MOFs structurally available,
+  - only **363** with adsorption labels.
+- Implications:
+  - standard data-hungry models are not appropriate,
+  - evaluation must avoid misleading leakage,
+  - the goal is practical prioritization and learning efficiency.
+- What is explicitly studied:
+  - effect of graph density,
+  - effect of labeled-node connectivity,
+  - real graph structure vs randomized structure.
 
 ---
 
 ## 6. Models explored
-Descriptor-based baselines:
-- Linear regression (Ridge)
-- k-Nearest Neighbors
-- Random Forests
-
-Graph-aware baselines:
-- Models that use graph-derived features (e.g., neighborhood statistics)
-
-Graph Neural Networks (GNNs):
-- Graph Convolutional Networks (GCNs)
-- Trained on MOF similarity graphs
-- Evaluated across multiple graph runs
-
-Control experiment (shuffled graphs):
-- Edge structure is randomized while keeping node features unchanged
-- Used to test whether graph structure itself carries useful signal
+- **Descriptor-based baselines**
+  - Ridge regression
+  - kNN regression
+  - Random Forest regression
+- **Graph-aware baseline (stronger)**
+  - uses **BlackHole node features** (graph-derived features) to predict CO₂ uptake,
+  - trained across multiple runs for stability.
+- **Graph Neural Network (GNN)**
+  - GCN trained on MOF similarity graphs,
+  - evaluated across runs,
+  - compared against shuffled graph control.
+- **Control experiment: shuffled graph**
+  - edges randomized but node features unchanged,
+  - tests whether graph structure adds real signal vs noise.
 
 ---
 
-## 7. How results are interpreted
-Instead of focusing only on final error values, the analysis emphasizes:
-- how label coverage changes with graph sparsification
-- how much information can propagate from training to test nodes
-- whether real graphs outperform shuffled ones
-- stability of results across multiple runs
-
-This helps answer why a model behaves the way it does, not just how well it performs.
-
----
-
-## 8. Repository structure (overview)
-- `src/`
-  - `data/` — data inspection, label extraction, splits
-  - `graphs/` — graph export, coverage & connectivity analysis
-  - `models/` — baselines and GNN training scripts
-  - `viz/` — visualization and graph plotting utilities
-- `notebooks/`
-  - `00_overview_pipeline.ipynb`
-  - `01_data_mapping_and_labels.ipynb`
-  - `02_splits_and_fewshot.ipynb`
-  - `04_baselines.ipynb`
-  - `05_gnn_vs_shuffled.ipynb`
-  - `06_summary_tables.ipynb`
-- `data/processed/` — small reproducible artifacts (splits, stats)
-- `outputs/figures/` — generated plots and visual diagnostics
-- `README.md`
-
-Large external datasets are intentionally excluded and must be downloaded separately.
+## 7. Key findings (what I observed)
+- **A) Threshold choice changes the “learning problem”**
+  - At **threshold_0.90**:
+    - only ~36–39 labeled MOFs per run → too little supervised signal for graph learning.
+  - At **threshold_0.10**:
+    - ~271–277 labeled MOFs per run → meaningful for GNN training.
+  - At **threshold_0.00**:
+    - ~307–313 labeled MOFs per run → highest coverage but graph is larger/denser.
+  - Interpretation:
+    - threshold selection controls how usable the graph is under few-shot supervision.
+- **B) Connectivity audit explains why GNNs can struggle**
+  - At 0.90:
+    - test nodes rarely connect to train nodes → low exposure.
+  - At 0.10 / 0.00:
+    - many test nodes have train-neighbors → information can propagate.
+- **C) Baselines vs GNN results (current status)**
+  - descriptor-only baselines are limited (only a few numeric structure features),
+  - graph-derived feature baseline improves validation but test remains challenging,
+  - GNN vs shuffled shows only small separation at 0.10 so far, suggesting:
+    - node features may dominate,
+    - graph signal may be weak/noisy,
+    - or the task is hard at this label scale.
+  - conclusion:
+    - emphasis is on diagnostics + robustness, not claiming “GNN wins”.
 
 ---
 
-## 9. What this project demonstrates
-- A complete end-to-end workflow for learning material properties with limited labels
-- Careful handling of data scarcity and evaluation bias
-- Meaningful use of graph structure in materials science
-- Clear comparison between classical ML, graph-based features, and GNNs
-- Emphasis on understanding, not black-box performance
+## 8. End result (practical output)
+- Concrete outputs produced:
+  - **Top-K MOF shortlist (refcodes)** ranked by predicted CO₂ uptake
+  - **Confidence score** from agreement/variation across graph runs
+  - **Ranking plot + table** (decision-oriented, not only RMSE)
+- Real-world mapping:
+  - supports decision-making for experimental/computational screening.
 
 ---
 
-## 10. How to run the pipeline
-Each stage can be executed independently.
-
-For a full run:
-- `python src/run_all.py`
-
-Notebooks can be run in order for exploratory analysis and visualization.
+## 9. Streamlit dashboard (what it shows)
+- The Streamlit app presents the pipeline end-to-end:
+  - problem statement + goal,
+  - data mapping summary (IDs + label overlap),
+  - threshold diagnostics (coverage + connectivity),
+  - baseline vs GNN vs shuffled comparison,
+  - Top-K ranking + confidence visualization.
+- Run command:
+  - `python -m streamlit run streamlit_app/app.py`
 
 ---
 
-## 11. Related Research Repositories and Foundations
-This project builds upon ideas, data structures, and research directions from existing open-source work in the MOF and materials-informatics community, particularly repositories that focus on MOF similarity graphs and graph-based learning.
+## 10. Repository structure (overview)
+- Folder layout:
+  - `src/`
+    - `data/` — data inspection, label extraction, splits
+    - `graphs/` — graph export, coverage & connectivity analysis
+    - `models/` — baselines, GNN, candidate ranking
+    - `viz/` — visualization utilities
+  - `notebooks/`
+    - `00_overview_pipeline.ipynb`
+    - `01_data_mapping_and_labels.ipynb`
+    - `02_splits_and_fewshot.ipynb`
+    - `04_baselines.ipynb`
+    - `05_gnn_vs_shuffled.ipynb`
+    - `06_summary_tables.ipynb`
+  - `streamlit_app/` — interactive dashboard
+  - `outputs/figures/` — generated plots and visuals
+  - `data/processed/` — small reproducible artifacts
+  - `README.md`
+- Note:
+  - large external datasets are excluded from version control and must be downloaded separately.
 
-The following repositories were referenced during the design and validation of this workflow:
-- MOFGalaxyNet  
-  - Provides a large-scale similarity network of MOFs (nodes = MOFs, edges = similarity)
-  - Motivated treating MOFs as a graph rather than independent samples
+---
 
-- BlackHole (Graph Sparsification Framework)  
-  - Introduces a method for sparsifying large similarity graphs using thresholds and multiple runs
-  - Used here to study how sparsification affects label availability, information flow, and learning behavior under limited data
+## 11. How to run the pipeline
+- Run end-to-end:
+  - `python src/run_all.py`
+- For exploration:
+  - run notebooks in order.
 
-Different sparsification thresholds (e.g., 0.90, 0.10, 0.00) are analyzed to understand the trade-off between:
-- graph size
-- label coverage
-- potential information leakage across data splits
+---
 
-These references helped shape:
-- the decision to use similarity graphs instead of purely tabular data
-- the threshold-based graph construction strategy
-- the evaluation setup comparing real graphs against shuffled (structure-destroyed) graphs
+## 12. Related research foundations
+- External inspirations used:
+  - **MOFGalaxyNet**
+    - large-scale MOF similarity network concept (MOFs as nodes, similarity as edges).
+  - **BlackHole**
+    - graph sparsification framework used to test thresholds and run-to-run robustness.
+- What these foundations supported in this project:
+  - similarity-graph representation,
+  - threshold-based graph experiments,
+  - robustness across multiple graph runs,
+  - real vs shuffled control setup.
+
+---
+
+## 13. What this project demonstrates
+- End-to-end pipeline for limited-label material property learning
+- Few-shot constraints handled explicitly
+- Graph diagnostics to avoid misleading conclusions
+- Baselines + controls for credibility
+- Practical output: ranked shortlist of candidate MOFs
+- Interactive dashboard to communicate results clearly
