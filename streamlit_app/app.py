@@ -76,6 +76,10 @@ def header() -> None:
             <br/>
             <span class="tiny">Interpretation focus: screening value (prioritization), not “perfect prediction”.</span>
         </div>
+
+        <div class="exec-card">
+            <b>Key Insight:</b> This view summarizes the model’s top 5 candidate MOFs, combining high predicted CO₂ uptake with low uncertainty (high confidence). We provide both quantitative scores (with error bars) and qualitative reasoning (e.g., pore size insights) for each material. This bridges the gap between model output and scientific interpretability — enabling better shortlisting for downstream lab or simulation validation.
+        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -122,11 +126,11 @@ def sidebar_nav() -> str:
 
 
 def route(page: str) -> None:
-    if page.startswith("1)"):
+    if page.startswith("1"):
         page_problem()
-    elif page.startswith("2)"):
+    elif page.startswith("2"):
         page_fewshot()
-    elif page.startswith("3)"):
+    elif page.startswith("3"):
         page_graphs()
     else:
         page_results()
