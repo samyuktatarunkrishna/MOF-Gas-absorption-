@@ -5,6 +5,7 @@ import pandas as pd
 import torch
 from torch_geometric.data import Data
 
+
 ID_COL = "refcode"
 Y_COL = "co2_uptake"
 
@@ -118,6 +119,8 @@ def build_data(threshold: str, run: str, out_path: Path):
         val_mask=torch.tensor(val_mask),
         test_mask=torch.tensor(test_mask),
     )
+
+    data.refcode = df[ID_COL].tolist()
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(data, out_path)
