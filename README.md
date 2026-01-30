@@ -131,6 +131,11 @@
   - **Ranking plot + table** (decision-oriented, not only RMSE)
 - Real-world mapping:
   - supports decision-making for experimental/computational screening.
+  ### Top-K Candidate Interpretation
+  - Identifies top-5 MOF candidates based on predicted CO₂ uptake and confidence scores
+  - Visualized with error bars (screen score ± uncertainty)
+  - Automatically interpreted based on pore structure and model source (RF vs RF+GNN)
+  - Accessible from final section of Streamlit app
 
 ---
 
