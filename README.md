@@ -98,7 +98,7 @@ git clone https://github.com/MehrdadJalali-AI/MOFGalaxyNet
 Relevant structural descriptor files should be placed in:
 
 ```
-data/raw/descriptors/
+data/raw/
 ```
 
 ---
@@ -114,7 +114,7 @@ git clone https://github.com/MehrdadJalali-AI/BlackHole
 Copy the sparsified graph folders into:
 
 ```
-data/raw/graphs/
+data/graphs/
 ```
 
 Example graph folders:
